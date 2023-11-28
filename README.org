@@ -1,0 +1,12 @@
+This is the place where I try to solve [[https://adventofcode.com/][Advent of Code]] puzzles in Rust.
+
+I won't save Christmas, but I'll have some fun anyway and I'll teach
+myself some Rust.
+
+* Usage
+
+#+begin_src shell
+git clone git@github.com:nlegrand/my_advent_of_code.git
+cd my_advent_of_code
+cargo run --bin 2022_day01_puzzle1  
+#+end_src

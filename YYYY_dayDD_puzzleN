@@ -1,0 +1,9 @@
+use std::fs;
+
+fn main() {
+    let file_path = "inputs/YYYY/dayDD_puzzleN";
+    let contents = fs::read_to_string(file_path)
+        .expect("No input yet");
+    for line in contents.lines() {
+    }
+}
