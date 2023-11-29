@@ -23,7 +23,7 @@ fn main() {
             current_calories += line.parse::<usize>().unwrap();
         }
     }
-    if (current_calories > 0) {
+    if current_calories > 0 {
 	println!("{}, {}", current_elf, current_calories);            
             if current_calories > most_calories {
                 most_calories = current_calories;
