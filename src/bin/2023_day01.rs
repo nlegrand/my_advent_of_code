@@ -33,6 +33,10 @@ fn puzzle1(contents: String) -> u32 {
     calibration_values.iter().sum()
 }
 
+fn puzzle2(contents: String) -> u32 {
+    0
+}
+
 fn main() {
     let file_path = "inputs/2023/day01";
     let contents = fs::read_to_string(file_path)
@@ -50,4 +54,11 @@ mod tests {
         
         assert_eq!(puzzle1(EXAMPLE_INPUT_1.to_string()), 142);
     }
+
+    #[test]
+    fn puzzle2_example() {
+        
+        assert_eq!(puzzle2(EXAMPLE_INPUT_2.to_string()), 281);
+    }
+
 }
