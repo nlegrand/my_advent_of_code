@@ -51,13 +51,13 @@ mod tests {
 
     #[test]
     fn puzzle1_example() {
-        
+
         assert_eq!(puzzle1(EXAMPLE_INPUT_1.to_string()), 142);
     }
 
     #[test]
     fn puzzle2_example() {
-        
+
         assert_eq!(puzzle2(EXAMPLE_INPUT_2.to_string()), 281);
     }
 
