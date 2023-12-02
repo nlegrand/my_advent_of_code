@@ -10,11 +10,11 @@ fn puzzle1(contents: String) -> u32 {
 	if line.is_empty() {
             continue;
         }
-	let game = line.split_once(':').unwrap(); //let game = (ngame, subsets)
-	let id = game.0.split_once(' ').unwrap(); //let id = ("Game", "1")
+	let (ngame, subsets) = line.split_once(':').unwrap();
+	let (game, id) = ngame.split_once(' ').unwrap();
 	let mut impossible = false;
-	println!("{} {}", id.0, id.1);
-	for subset in game.1.split(';') {
+	println!("{} {}", game, id);
+	for subset in subsets.split(';') {
 	    for cube in subset.split(',') {
 		let res = cube.trim().split_once(' ').unwrap(); // let res = ("1", "red")
 		println!("  {:?}", res);
@@ -27,10 +27,10 @@ fn puzzle1(contents: String) -> u32 {
 	    }
 	}
 	if impossible {
-	    println!("Impossible: {}", game.0);
+	    println!("Impossible: {}", ngame);
 	}
 	else {
-	    ids.push(id.1.parse::<u32>().unwrap());
+	    ids.push(id.parse::<u32>().unwrap());
 	}
     }
     let ret = ids.iter().sum();
