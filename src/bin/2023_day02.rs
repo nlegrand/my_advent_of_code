@@ -7,6 +7,9 @@ use std::fs;
 fn puzzle1(contents: String) -> u32 {
     let mut ids = vec![0u32];
     for line in contents.split("\n") {
+	if line.is_empty() {
+            continue;
+        }
 	let game = line.split_once(':').unwrap(); //let game = (ngame, subsets)
 	let id = game.0.split_once(' ').unwrap(); //let id = ("Game", "1")
 	let mut impossible = false;
@@ -16,9 +19,9 @@ fn puzzle1(contents: String) -> u32 {
 		let res = cube.trim().split_once(' ').unwrap(); // let res = ("1", "red")
 		println!("  {:?}", res);
 		impossible = match res {
-		    (n, "red") if n.parse::<u32>().unwrap() >= 12 => true,
-		    (n, "green") if n.parse::<u32>().unwrap() >= 13 => true,
-		    (n, "blue") if n.parse::<u32>().unwrap() >= 14 => true,
+		    (n, "red") if n.parse::<u32>().unwrap() > 12 => true,
+		    (n, "green") if n.parse::<u32>().unwrap() > 13 => true,
+		    (n, "blue") if n.parse::<u32>().unwrap() > 14 => true,
 		     _ => impossible,
 		}
 	    }
