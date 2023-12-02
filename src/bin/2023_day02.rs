@@ -39,9 +39,37 @@ fn puzzle1(contents: String) -> u32 {
 }
 
 fn puzzle2(contents: String) -> u32 {
+    let mut powers = vec![0u32];
     for line in contents.split("\n") {
+	let mut reds = vec![];
+	let mut greens = vec![];
+	let mut blues = vec![];
+	if line.is_empty() {
+            continue;
+        }
+	let (ngame, subsets) = line.split_once(':').unwrap();
+	let (game, id) = ngame.split_once(' ').unwrap();
+	println!("{} {}", game, id);
+	for subset in subsets.split(';') {
+	    for cube in subset.split(',') {
+		let (ncubes ,color) = cube.trim().split_once(' ').unwrap(); // let res = ("1", "red")
+		println!("  (\"{}\", \"{}\")", ncubes, color);
+		match color {
+		    "red" => reds.push(ncubes.parse::<u32>().unwrap()),
+		    "green" => greens.push(ncubes.parse::<u32>().unwrap()),
+		    "blue" => blues.push(ncubes.parse::<u32>().unwrap()),
+		     _ => (),
+		}
+	    }
+	}
+	let power = reds.iter().max().unwrap() * greens.iter().max().unwrap() * blues.iter().max().unwrap();
+	println!("  Power: {}", power);
+	powers.push(power);
     }
-    0
+    let ret = powers.iter().sum();
+    println!("Res: {}", ret);
+    ret
+
 }
 
 
@@ -50,8 +78,8 @@ fn main() {
     let contents = fs::read_to_string(file_path)
         .expect("No input yet");
     let res1 = puzzle1(contents.clone());
-    println!("Puzzle 1: {}", res1);
     let res2 = puzzle2(contents.clone());
+    println!("\nPuzzle 1: {}", res1);
     println!("Puzzle 2: {}", res2);
     
 }
@@ -60,25 +88,22 @@ fn main() {
 mod tests {
     use crate::*;
 
-    const EXAMPLE_INPUT_1: &str = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+    const EXAMPLE_INPUT: &str = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
 Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
 Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
 
-    const EXAMPLE_INPUT_2: &str = "";
-
-
     #[test]
     fn puzzle1_example() {
 
-        assert_eq!(puzzle1(EXAMPLE_INPUT_1.to_string()), 8);
+        assert_eq!(puzzle1(EXAMPLE_INPUT.to_string()), 8);
     }
 
     #[test]
     fn puzzle2_example() {
 
-        assert_eq!(puzzle2(EXAMPLE_INPUT_2.to_string()), 0);
+        assert_eq!(puzzle2(EXAMPLE_INPUT.to_string()), 2286);
     }
 
 }
