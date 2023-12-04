@@ -1,9 +1,10 @@
 use std::fs;
 use std::fmt;
+use std::collections::HashMap; // for puzzle 2
 
 // https://adventofcode.com/2023/day/3
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Hash, Eq, PartialEq)]
 struct Position {
     x: i64,
     y: i64,
@@ -113,10 +114,78 @@ fn puzzle1(contents: String) -> u32 {
 }
 
 fn puzzle2(contents: String) -> u32 {
-    for line in contents.split("\n") {
-	//println!("{}", line);
+    let mut line_number = 0;
+    let mut column_number = 0;
+
+    let mut stars_pos = vec![];
+    // parse for gears
+    for c in contents.chars() {
+	if c == '*' {
+	    //println!("Symbol {} detected at pos:  ({}, {})", c, column_number, line_number);
+	    stars_pos.push(Position {x: column_number, y: line_number})
+	}
+	column_number += 1;
+	if c == '\n' {
+	    line_number += 1;
+	    column_number = 0;
+	}
     }
-    0
+    //println!("{:?}", symbols_pos);
+
+    //parse for numbers and check if symbol is adjacent
+    line_number = 0;
+    column_number = 0;
+    let mut digits = vec![];
+    let mut is_part_number = false;
+    let mut cur_star_pos = Position {x: 0, y: 0} ;
+    let mut gears = HashMap::new();
+    for c in contents.chars() {
+	if c.is_ascii_digit() {
+	    let cur_point = Position { x: column_number, y: line_number };
+	    for star in &stars_pos {
+		if cur_point.is_adjacent(*star) {
+		    is_part_number = true;
+		    cur_star_pos = *star;
+		    //println!("Char {} and Point {} are part of a part number adjacent to symbol {}", c, cur_point, symbol);
+		}
+	    }
+	    digits.push(c.to_string().parse::<u32>().unwrap());
+	}
+	else {
+	    if !digits.is_empty() {
+		if is_part_number {
+		    let mut l = digits.len();
+		    let mut part_number = 0;
+		    for i in &digits {
+			part_number += 10_u32.pow((l - 1).try_into().unwrap()) * i;
+			l -= 1;
+		    }
+		    //println!("Partnumber: {}", part_number);
+		    gears.entry(cur_star_pos).or_insert_with(Vec::new).push(part_number);
+		}
+		digits = vec![];
+		is_part_number = false;		
+	    }
+	    if c == '\n' {
+		line_number += 1;
+		column_number = 0;
+		digits = vec![];
+		is_part_number = false;
+		continue;
+	    }
+	}
+	column_number += 1;
+    }
+    println!("{:?}", gears);
+    let mut real_gears = vec![];
+    for (key, value) in &gears {
+	if value.len() == 2 {
+	    real_gears.push(value[0] * value[1]);
+	}
+    }
+    let res = real_gears.iter().sum();
+    println!("Res puzzle 1: {}", res);
+    res
 }
 
 
@@ -186,7 +255,7 @@ mod tests {
     #[test]
     fn puzzle2_example() {
 
-        assert_eq!(puzzle2(EXAMPLE_INPUT.to_string()), 0);
+        assert_eq!(puzzle2(EXAMPLE_INPUT.to_string()), 467835);
     }
 
 }
