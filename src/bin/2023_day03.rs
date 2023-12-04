@@ -48,20 +48,20 @@ impl fmt::Display for Position {
 fn puzzle1(contents: String) -> u32 {
     let mut line_number = 0;
     let mut symbols_pos = vec![];
-    for line in contents.split("\n") {
-	if line.is_empty() {
-	    continue;
+    let mut column_number = 0;
+    for c in contents.chars() {
+	if c.is_ascii_punctuation() && c != '.' {
+	    println!("Symbol detected at pos:  ({}, {})", column_number, line_number);
+	    symbols_pos.push(Position {x: column_number, y: line_number})
 	}
-	let mut column_number = 0;
-	for c in line.chars() {
-	    if c.is_ascii_punctuation() && c != '.' {
-		println!("Symbol detected at pos:  ({}, {})", column_number, line_number);
-		symbols_pos.push(Position {x: column_number, y: line_number})
-	    }
-	    column_number += 1;
+	column_number += 1;
+	if c == '\n' {
+	    line_number += 1;
+	    column_number = 0;
 	}
-	line_number += 1;
     }
+
+
     println!("{:?}", symbols_pos);
     for line in contents.split("\n") {
 	println!("{}", line);
@@ -85,7 +85,7 @@ fn main() {
     let res2 = puzzle2(contents.clone());
     println!("\nPuzzle 1: {}", res1);
     println!("Puzzle 2: {}", res2);
-    
+
 }
 
 #[cfg(test)]
