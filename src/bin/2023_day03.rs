@@ -53,7 +53,7 @@ fn puzzle1(contents: String) -> u32 {
     // parse for symbols
     for c in contents.chars() {
 	if c.is_ascii_punctuation() && c != '.' {
-	    println!("Symbol {} detected at pos:  ({}, {})", c, column_number, line_number);
+	    //println!("Symbol {} detected at pos:  ({}, {})", c, column_number, line_number);
 	    symbols_pos.push(Position {x: column_number, y: line_number})
 	}
 	column_number += 1;
@@ -62,7 +62,7 @@ fn puzzle1(contents: String) -> u32 {
 	    column_number = 0;
 	}
     }
-    println!("{:?}", symbols_pos);
+    //println!("{:?}", symbols_pos);
 
     //parse for numbers and check if symbol is adjacent
     line_number = 0;
@@ -76,7 +76,7 @@ fn puzzle1(contents: String) -> u32 {
 	    for symbol in &symbols_pos {
 		if cur_point.is_adjacent(*symbol) {
 		    is_part_number = true;
-		    println!("Char {} and Point {} are part of a part number adjacent to symbol {}", c, cur_point, symbol);
+		    //println!("Char {} and Point {} are part of a part number adjacent to symbol {}", c, cur_point, symbol);
 		}
 	    }
 	    digits.push(c.to_string().parse::<u32>().unwrap());
@@ -90,7 +90,7 @@ fn puzzle1(contents: String) -> u32 {
 			part_number += 10_u32.pow((l - 1).try_into().unwrap()) * i;
 			l -= 1;
 		    }
-		    println!("Partnumber: {}", part_number);
+		    //println!("Partnumber: {}", part_number);
 		    part_numbers.push(part_number);
 		}
 		digits = vec![];
@@ -107,14 +107,14 @@ fn puzzle1(contents: String) -> u32 {
 	column_number += 1;
     }
     let res = part_numbers.iter().sum();
-    println!("Res vec puzzle 1: {:?}", part_numbers);
-    println!("Res puzzle 1: {}", res);
+    //println!("Res vec puzzle 1: {:?}", part_numbers);
+    //println!("Res puzzle 1: {}", res);
     res
 }
 
 fn puzzle2(contents: String) -> u32 {
     for line in contents.split("\n") {
-	println!("{}", line);
+	//println!("{}", line);
     }
     0
 }
