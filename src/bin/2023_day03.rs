@@ -18,16 +18,22 @@ impl Position {
 	self.x == position.x && self.y == position.y
     }
     fn is_adjacent(&self, position:Position) -> bool {
-	if position.equals(self.add(Position { x: -1, y: 0 })) {
-	    return true;
+	let adjacent_vectors = [
+	    Position { x: -1, y: 0 },
+	    Position { x: -1, y: 1 },
+	    Position { x: -1, y: -1 },
+	    Position { x: 0, y: 1 },
+	    Position { x: 0, y: -1 },
+	    Position { x: 1, y: 0 },
+	    Position { x: 1, y: -1 },
+	    Position { x: 1, y: 1 },
+	];
+	for vector in adjacent_vectors {
+	    if self.add(vector).equals(position) {
+		return true;
+	    }
 	}
-	else if position.equals(self.add(Position { x: -1, y: 1 })) {
-	    return true;
-	}
-	else if position.equals(self.add(Position { x: -1, y: -1 })) {
-	    return true;
-	}
-	false
+	return false;
     }
 }
 
@@ -93,6 +99,29 @@ mod tests {
 	let pos3 = Position { x: 2, y: 3 };
 	assert_eq!(pos1.equals(pos2), true);
 	assert_eq!(pos1.equals(pos3), false);
+    }
+
+    #[test]
+    fn is_adjacent() {
+	let pos1 = Position { x: 5, y: 7 };
+	let pos2 = Position { x: 5, y: 8 };
+	let pos3 = Position { x: 6, y: 8 };
+	let pos4 = Position { x: 6, y: 7 };
+	let pos5 = Position { x: 6, y: 6 };
+	let pos6 = Position { x: 5, y: 6 };
+	let pos7 = Position { x: 4, y: 6 };
+	let pos8 = Position { x: 4, y: 7 };
+	let pos9 = Position { x: 4, y: 8 };
+	let pos10 = Position { x: 5, y: 9 };
+	assert_eq!(pos1.is_adjacent(pos2), true);
+	assert_eq!(pos1.is_adjacent(pos3), true);
+	assert_eq!(pos1.is_adjacent(pos4), true);
+	assert_eq!(pos1.is_adjacent(pos5), true);
+	assert_eq!(pos1.is_adjacent(pos6), true);
+	assert_eq!(pos1.is_adjacent(pos7), true);
+	assert_eq!(pos1.is_adjacent(pos8), true);
+	assert_eq!(pos1.is_adjacent(pos9), true);
+	assert_eq!(pos1.is_adjacent(pos10), false);
     }
 
     const EXAMPLE_INPUT: &str = "467..114..
