@@ -178,7 +178,7 @@ fn puzzle2(contents: String) -> u32 {
     }
     println!("{:?}", gears);
     let mut real_gears = vec![];
-    for (key, value) in &gears {
+    for (_key, value) in &gears {
 	if value.len() == 2 {
 	    real_gears.push(value[0] * value[1]);
 	}
