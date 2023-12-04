@@ -47,11 +47,13 @@ impl fmt::Display for Position {
 
 fn puzzle1(contents: String) -> u32 {
     let mut line_number = 0;
-    let mut symbols_pos = vec![];
     let mut column_number = 0;
+
+    let mut symbols_pos = vec![];
+    // parse for symbols
     for c in contents.chars() {
 	if c.is_ascii_punctuation() && c != '.' {
-	    println!("Symbol detected at pos:  ({}, {})", column_number, line_number);
+	    println!("Symbol {} detected at pos:  ({}, {})", c, column_number, line_number);
 	    symbols_pos.push(Position {x: column_number, y: line_number})
 	}
 	column_number += 1;
@@ -60,13 +62,54 @@ fn puzzle1(contents: String) -> u32 {
 	    column_number = 0;
 	}
     }
-
-
     println!("{:?}", symbols_pos);
-    for line in contents.split("\n") {
-	println!("{}", line);
+
+    //parse for numbers and check if symbol is adjacent
+    line_number = 0;
+    column_number = 0;
+    let mut digits = vec![];
+    let mut part_numbers: Vec<u32> = vec![]; //our results
+    let mut is_part_number = false;
+    for c in contents.chars() {
+	if c.is_ascii_digit() {
+	    let cur_point = Position { x: column_number, y: line_number };
+	    for symbol in &symbols_pos {
+		if cur_point.is_adjacent(*symbol) {
+		    is_part_number = true;
+		    println!("Char {} and Point {} are part of a part number adjacent to symbol {}", c, cur_point, symbol);
+		}
+	    }
+	    digits.push(c.to_string().parse::<u32>().unwrap());
+	}
+	else {
+	    if !digits.is_empty() {
+		if is_part_number {
+		    let mut l = digits.len();
+		    let mut part_number = 0;
+		    for i in &digits {
+			part_number += 10_u32.pow((l - 1).try_into().unwrap()) * i;
+			l -= 1;
+		    }
+		    println!("Partnumber: {}", part_number);
+		    part_numbers.push(part_number);
+		}
+		digits = vec![];
+		is_part_number = false;		
+	    }
+	    if c == '\n' {
+		line_number += 1;
+		column_number = 0;
+		digits = vec![];
+		is_part_number = false;
+		continue;
+	    }
+	}
+	column_number += 1;
     }
-    0
+    let res = part_numbers.iter().sum();
+    println!("Res vec puzzle 1: {:?}", part_numbers);
+    println!("Res puzzle 1: {}", res);
+    res
 }
 
 fn puzzle2(contents: String) -> u32 {
@@ -97,8 +140,8 @@ mod tests {
 	let pos1 = Position { x: 5, y: 7 };
 	let pos2 = Position { x: 5, y: 7 };
 	let pos3 = Position { x: 2, y: 3 };
-	assert_eq!(pos1.equals(pos2), true);
-	assert_eq!(pos1.equals(pos3), false);
+	assert!(pos1.equals(pos2));
+	assert!(!pos1.equals(pos3));
     }
 
     #[test]
@@ -113,15 +156,15 @@ mod tests {
 	let pos8 = Position { x: 4, y: 7 };
 	let pos9 = Position { x: 4, y: 8 };
 	let pos10 = Position { x: 5, y: 9 };
-	assert_eq!(pos1.is_adjacent(pos2), true);
-	assert_eq!(pos1.is_adjacent(pos3), true);
-	assert_eq!(pos1.is_adjacent(pos4), true);
-	assert_eq!(pos1.is_adjacent(pos5), true);
-	assert_eq!(pos1.is_adjacent(pos6), true);
-	assert_eq!(pos1.is_adjacent(pos7), true);
-	assert_eq!(pos1.is_adjacent(pos8), true);
-	assert_eq!(pos1.is_adjacent(pos9), true);
-	assert_eq!(pos1.is_adjacent(pos10), false);
+	assert!(pos1.is_adjacent(pos2));
+	assert!(pos1.is_adjacent(pos3));
+	assert!(pos1.is_adjacent(pos4));
+	assert!(pos1.is_adjacent(pos5));
+	assert!(pos1.is_adjacent(pos6));
+	assert!(pos1.is_adjacent(pos7));
+	assert!(pos1.is_adjacent(pos8));
+	assert!(pos1.is_adjacent(pos9));
+	assert!(!pos1.is_adjacent(pos10));
     }
 
     const EXAMPLE_INPUT: &str = "467..114..
@@ -137,7 +180,6 @@ mod tests {
 
     #[test]
     fn puzzle1_example() {
-
         assert_eq!(puzzle1(EXAMPLE_INPUT.to_string()), 4361);
     }
 
