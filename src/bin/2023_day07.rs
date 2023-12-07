@@ -74,6 +74,14 @@ fn labels_to_hand (labels: &str) -> Option<Hand> {
     if top_value == 3 && has_pair != None {
         return Some(Hand::FullHouse(top_card, **has_pair.unwrap()));
     }
+    if top_value == 2 && has_pair != None {
+	if top_card < **has_pair.unwrap() {
+            return Some(Hand::TwoOfAKind(**has_pair.unwrap()));
+	}
+	else {
+	    return Some(Hand::TwoOfAKind(top_card));
+	}
+    }
     else {
         match top_value {
             5 => return Some(Hand::FiveOfAKind(top_card)),
@@ -104,11 +112,19 @@ fn puzzle1(contents: String) -> u32 {
         }
 	println!("{}", line);
         let (hand, bid) = line.split_once(' ').unwrap();
-        hands_and_bids.push(());
-        labels_to_hand(hand);
+        hands_and_bids.push((labels_to_hand(hand).unwrap(), bid));
+        
     }
-    println!("{:?}", hands_and_bids);
-    0
+    hands_and_bids.sort_by(|a, b| a.0.cmp(&b.0));
+    let mut rank = 1;
+    let mut result = 0;
+    for (_hand, bid) in hands_and_bids {
+	result += rank * bid.parse::<u32>().unwrap();
+	rank += 1;
+    }
+    //println!("{:?}", hands_and_bids);
+    println!("{}", result);
+    result
 }
 
 fn puzzle2(contents: String) -> u32 {
@@ -120,7 +136,7 @@ fn puzzle2(contents: String) -> u32 {
 
 
 fn main() {
-    let file_path = "inputs/2023/day06";
+    let file_path = "inputs/2023/day07";
     let contents = fs::read_to_string(file_path)
         .expect("No input yet");
     let res1 = puzzle1(contents.clone());
