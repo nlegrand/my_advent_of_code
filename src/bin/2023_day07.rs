@@ -1,7 +1,7 @@
 use std::fs;
 use std::collections::HashMap;
 
-// https://adventofcode.com/2023/day/6
+// https://adventofcode.com/2023/day/7
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Hash, Copy, Clone)]
 enum Card {
@@ -110,16 +110,17 @@ fn puzzle1(contents: String) -> u32 {
         if line.is_empty() {
             continue;
         }
-	println!("{}", line);
+	//println!("{}", line);
         let (hand, bid) = line.split_once(' ').unwrap();
-        hands_and_bids.push((labels_to_hand(hand).unwrap(), bid));
+        hands_and_bids.push((labels_to_hand(hand).unwrap(), bid, hand));
         
     }
     hands_and_bids.sort_by(|a, b| a.0.cmp(&b.0));
     let mut rank = 1;
     let mut result = 0;
-    for (_hand, bid) in hands_and_bids {
+    for (hand, bid, hand_str) in hands_and_bids {
 	result += rank * bid.parse::<u32>().unwrap();
+	println!("{} -> {:?}, Bid: {}, Rank: {}, winnings: {}", hand_str, hand, bid, rank, result);
 	rank += 1;
     }
     //println!("{:?}", hands_and_bids);
@@ -127,10 +128,10 @@ fn puzzle1(contents: String) -> u32 {
     result
 }
 
-fn puzzle2(contents: String) -> u32 {
-    for line in contents.split("\n") {
-	println!("{}", line);
-    }
+fn puzzle2(_contents: String) -> u32 {
+    // for line in contents.split("\n") {
+    // 	//println!("{}", line);
+    // }
     0
 }
 
