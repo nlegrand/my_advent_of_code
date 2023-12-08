@@ -50,9 +50,8 @@ fn labels_to_hand (labels: &str) -> Option<Hand> {
     }
     let mut hand_unsorted = hand_v.clone();
     hand_v.sort_by(|a, b| b.cmp(a));
-    let hand_v2 = hand_v.clone();
     let mut count_cards = HashMap::new();
-    for card in &hand_v2 {
+    for card in &hand_v {
         let count = count_cards.entry(card).or_insert(0);
         *count += 1;
     }
@@ -77,19 +76,9 @@ fn labels_to_hand (labels: &str) -> Option<Hand> {
         return Some(Hand::FullHouse(hand_unsorted));
     }
     if top_value == 2 && top_card != **has_pair.unwrap() {
-        hand_v.retain(|&x| x != top_card);
-        hand_v.retain(|&x| x != **has_pair.unwrap());
-	if top_card < **has_pair.unwrap() {
-            return Some(Hand::TwoPair(hand_unsorted));
-	}
-	else {
-	    return Some(Hand::TwoPair(hand_unsorted));
-	}
+        return Some(Hand::TwoPair(hand_unsorted));
     }
     else {
-        let another_clone = hand_v.clone();
-        //hand_unsorted.retain(|&x| x != top_card);
-        println!("Last transform {labels} -> {:?} -> {:?} (unsorted: {:?})", another_clone, hand_v, hand_unsorted);
         match top_value {
             5 => return Some(Hand::FiveOfAKind(hand_unsorted)),
             4 => return Some(Hand::FourOfAKind(hand_unsorted)),
