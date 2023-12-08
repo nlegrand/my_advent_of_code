@@ -74,16 +74,16 @@ fn labels_to_hand (labels: &str) -> Option<Hand> {
         }
     }
     if top_value == 3 && has_pair != None {
-        return Some(Hand::FullHouse(top_card, top_card, top_card, **has_pair.unwrap(), **has_pair.unwrap()));
+        return Some(Hand::FullHouse(hand_unsorted));
     }
     if top_value == 2 && top_card != **has_pair.unwrap() {
         hand_v.retain(|&x| x != top_card);
         hand_v.retain(|&x| x != **has_pair.unwrap());
 	if top_card < **has_pair.unwrap() {
-            return Some(Hand::TwoPair(**has_pair.unwrap(), **has_pair.unwrap(), top_card, top_card, hand_unsorted));
+            return Some(Hand::TwoPair(hand_unsorted));
 	}
 	else {
-	    return Some(Hand::TwoPair(top_card, top_card, **has_pair.unwrap(), **has_pair.unwrap(), hand_unsorted));
+	    return Some(Hand::TwoPair(hand_unsorted));
 	}
     }
     else {
@@ -91,11 +91,11 @@ fn labels_to_hand (labels: &str) -> Option<Hand> {
         //hand_unsorted.retain(|&x| x != top_card);
         println!("Last transform {labels} -> {:?} -> {:?} (unsorted: {:?})", another_clone, hand_v, hand_unsorted);
         match top_value {
-            5 => return Some(Hand::FiveOfAKind(top_card, top_card, top_card, top_card, top_card)),
-            4 => return Some(Hand::FourOfAKind(top_card, top_card, top_card, top_card, hand_unsorted)),
-            3 => return Some(Hand::ThreeOfAKind(top_card, top_card, top_card, hand_unsorted)),
-            2 => return Some(Hand::OnePair(top_card, top_card, hand_unsorted)),
-            1 => return Some(Hand::HighCard(top_card, hand_unsorted)),
+            5 => return Some(Hand::FiveOfAKind(hand_unsorted)),
+            4 => return Some(Hand::FourOfAKind(hand_unsorted)),
+            3 => return Some(Hand::ThreeOfAKind(hand_unsorted)),
+            2 => return Some(Hand::OnePair(hand_unsorted)),
+            1 => return Some(Hand::HighCard(hand_unsorted)),
             _ => return None,
         }
     }
@@ -103,13 +103,13 @@ fn labels_to_hand (labels: &str) -> Option<Hand> {
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug)]
 enum Hand {
-    HighCard(Card, Vec<Card>),
-    OnePair(Card, Card, Vec<Card>),
-    TwoPair(Card, Card, Card, Card, Vec<Card>),
-    ThreeOfAKind(Card, Card, Card, Vec<Card>),
-    FullHouse(Card, Card, Card, Card, Card),
-    FourOfAKind(Card, Card, Card, Card, Vec<Card>),
-    FiveOfAKind(Card, Card, Card, Card, Card),
+    HighCard(Vec<Card>),
+    OnePair(Vec<Card>),
+    TwoPair(Vec<Card>),
+    ThreeOfAKind(Vec<Card>),
+    FullHouse(Vec<Card>),
+    FourOfAKind(Vec<Card>),
+    FiveOfAKind(Vec<Card>),
 }
 
 fn puzzle1(contents: String) -> i64 {
